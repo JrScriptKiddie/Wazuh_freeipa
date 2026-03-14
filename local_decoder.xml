@@ -1,0 +1,29 @@
+<decoder name="freeipa-krb5kdc">
+  <program_name>krb5kdc</program_name>
+</decoder>
+
+<decoder name="freeipa-kadmind">
+  <program_name>kadmind</program_name>
+</decoder>
+
+<decoder name="freeipa-dirsrv-access">
+  <prematch>conn=</prematch>
+</decoder>
+
+<decoder name="freeipa-dirsrv-access-srch">
+  <parent>freeipa-dirsrv-access</parent>
+  <regex>conn=([0-9]+) op=([0-9]+) SRCH base="([^"]+)" scope=([0-9]+) filter="([^"]+)"</regex>
+  <order>conn_id,op_id,ldap_base,ldap_scope,ldap_filter</order>
+</decoder>
+
+<decoder name="freeipa-dirsrv-access-mod">
+  <parent>freeipa-dirsrv-access</parent>
+  <regex>conn=([0-9]+) op=([0-9]+) MOD dn="([^"]+)"</regex>
+  <order>conn_id,op_id,ldap_dn</order>
+</decoder>
+
+<decoder name="freeipa-dirsrv-access-result">
+  <parent>freeipa-dirsrv-access</parent>
+  <regex>conn=([0-9]+) op=([0-9]+) RESULT err=([0-9]+) tag=([0-9]+) nentries=([0-9]+)</regex>
+  <order>conn_id,op_id,ldap_err,ldap_tag,ldap_nentries</order>
+</decoder>
