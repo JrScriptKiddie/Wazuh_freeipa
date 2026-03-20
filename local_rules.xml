@@ -6,58 +6,96 @@
   </rule>
 
   <rule id="100501" level="8">
-    <decoded_as>freeipa-krb5kdc</decoded_as>
+    <if_sid>100500</if_sid>
     <match>PREAUTH_FAILED</match>
     <description>FreeIPA Kerberos pre-authentication failed</description>
     <group>authentication_failed,</group>
   </rule>
 
   <rule id="100502" level="7">
-    <decoded_as>freeipa-krb5kdc</decoded_as>
+    <if_sid>100500</if_sid>
     <match>CLIENT_NOT_FOUND</match>
     <description>FreeIPA Kerberos client not found</description>
     <group>authentication_failed,invalid_user,</group>
   </rule>
 
   <rule id="100503" level="4">
-    <decoded_as>freeipa-krb5kdc</decoded_as>
+    <if_sid>100500</if_sid>
     <match>NEEDED_PREAUTH</match>
     <description>FreeIPA Kerberos pre-auth required</description>
   </rule>
 
   <rule id="100504" level="3">
-    <decoded_as>freeipa-krb5kdc</decoded_as>
-    <match>AS_REQ</match>
+    <if_sid>100500</if_sid>
     <match>ISSUE:</match>
-    <description>FreeIPA Kerberos AS_REQ ticket issued</description>
-    <group>authentication_success,</group>
+    <description>FreeIPA Kerberos ticket issued</description>
   </rule>
 
-  <rule id="100505" level="3">
-    <decoded_as>freeipa-krb5kdc</decoded_as>
-    <match>TGS_REQ</match>
-    <match>ISSUE:</match>
-    <description>FreeIPA Kerberos TGS ticket issued</description>
+  <rule id="100510" level="5">
+    <decoded_as>freeipa-dirsrv-bind</decoded_as>
+    <description>FreeIPA LDAP bind operation</description>
+    <group>ldap_bind,authentication_success,</group>
   </rule>
 
-  <rule id="100510" level="2">
-    <decoded_as>freeipa-kadmind</decoded_as>
-    <description>FreeIPA Kerberos admin activity</description>
-  </rule>
-
-  <rule id="100520" level="2">
-    <decoded_as>freeipa-dirsrv-access-srch</decoded_as>
+  <rule id="100511" level="4">
+    <decoded_as>freeipa-dirsrv-search</decoded_as>
     <description>FreeIPA LDAP search operation</description>
+    <group>ldap_search,</group>
   </rule>
 
-  <rule id="100521" level="5">
-    <decoded_as>freeipa-dirsrv-access-mod</decoded_as>
+  <rule id="100512" level="6">
+    <decoded_as>freeipa-dirsrv-mod</decoded_as>
     <description>FreeIPA LDAP modify operation</description>
+    <group>ldap_modify,account_changed,</group>
   </rule>
 
-  <rule id="100522" level="2">
-    <decoded_as>freeipa-dirsrv-access-result</decoded_as>
+  <rule id="100513" level="3">
+    <decoded_as>freeipa-dirsrv-result</decoded_as>
     <description>FreeIPA LDAP result operation</description>
+    <group>ldap_result,</group>
+  </rule>
+
+  <rule id="100520" level="8">
+    <if_sid>100510</if_sid>
+    <match>uid=admin,cn=users,cn=accounts</match>
+    <description>FreeIPA LDAP bind as admin</description>
+    <group>privileged_account,ldap_bind_admin,</group>
+  </rule>
+
+  <rule id="100521" level="6">
+    <if_sid>100511</if_sid>
+    <match>base="cn=users,cn=accounts</match>
+    <description>FreeIPA LDAP search in users container</description>
+    <group>ldap_users,</group>
+  </rule>
+
+  <rule id="100522" level="6">
+    <if_sid>100511</if_sid>
+    <match>base="cn=groups,cn=accounts</match>
+    <description>FreeIPA LDAP search in groups container</description>
+    <group>ldap_groups,</group>
+  </rule>
+
+  <rule id="100523" level="9">
+    <if_sid>100512</if_sid>
+    <match>MOD dn="uid=</match>
+    <description>FreeIPA LDAP user object modified</description>
+    <group>ldap_user_modified,account_changed,</group>
+  </rule>
+
+  <rule id="100524" level="9">
+    <if_sid>100512</if_sid>
+    <match>MOD dn="cn=</match>
+    <match>cn=groups,cn=accounts</match>
+    <description>FreeIPA LDAP group modified</description>
+    <group>ldap_group_modified,group_changed,</group>
+  </rule>
+
+  <rule id="100525" level="7">
+    <if_sid>100511</if_sid>
+    <match>filter="(&(uid=</match>
+    <description>FreeIPA LDAP search by uid</description>
+    <group>ldap_user_lookup,</group>
   </rule>
 
 </group>
